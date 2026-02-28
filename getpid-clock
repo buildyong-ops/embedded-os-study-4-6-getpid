@@ -1,0 +1,27 @@
+#include <time.h>
+#include <unistd.h>
+#include <stdio.h>
+
+int main() {
+    struct timespec start, end;
+    int nloops = 1000000;
+
+    clock_gettime(CLOCK_MONOTONIC, &start);
+
+    for (int i = 0; i < nloops; i++) {
+        getpid();
+    }
+
+    clock_gettime(CLOCK_MONOTONIC, &end);
+
+    long diff_ns = (end.tv_sec - start.tv_sec) * 1000000000L
+                 + (end.tv_nsec - start.tv_nsec);
+
+    double diff_us = diff_ns / 1000.0;
+    double avg_us = diff_us / nloops;
+
+    printf("총 실행 시간: %.3f us\n", diff_us);
+    printf("평균 getpid() 비용: %.6f us\n", avg_us);
+
+    return 0;
+}
